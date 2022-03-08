@@ -1,11 +1,8 @@
-extern crate ddsfile;
-extern crate image;
-extern crate intel_tex;
-
+use ddsfile::NewDxgiParams;
 use image::GenericImageView;
 use image::ImageBuffer;
 use image::Pixel;
-use intel_tex::bc7;
+use ispc_texcomp::bc7;
 use std::fs::File;
 use std::path::Path;
 
@@ -30,7 +27,7 @@ fn main() {
         }
     }
 
-    let block_count = intel_tex::divide_up_by_multiple(width * height, 16);
+    let block_count = ispc_texcomp::divide_up_by_multiple(width * height, 16);
     println!("Block count: {}", block_count);
 
     let mip_count = 1;
@@ -41,21 +38,22 @@ fn main() {
     let alpha_mode = AlphaMode::Opaque;
     let depth = 1;
 
-    let mut dds = Dds::new_dxgi(
+    let dxgi_param = NewDxgiParams {
         height,
         width,
-        Some(depth),
-        DxgiFormat::BC7_UNorm,
-        Some(mip_count),
-        Some(array_layers),
-        Some(caps2),
+        depth: Some(depth),
+        format: DxgiFormat::BC7_UNorm,
+        mipmap_levels: Some(mip_count),
+        array_layers: Some(array_layers),
+        caps2: Some(caps2),
         is_cubemap,
         resource_dimension,
         alpha_mode,
-    )
-    .unwrap();
+    };
 
-    let surface = intel_tex::RgbaSurface {
+    let mut dds = Dds::new_dxgi(dxgi_param).unwrap();
+
+    let surface = ispc_texcomp::RgbaSurface {
         width,
         height,
         stride: width * 4,
