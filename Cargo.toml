@@ -1,0 +1,49 @@
+[package]
+name = "ispc-texcomp"
+version = "0.1.5"
+authors = ["Daniel Hu <yimingdz@gmail.com>", "Graham Wihlidal <graham@wihlidal.ca>"]
+description = "Rust bindings for Intel's ISPC texture compressor."
+homepage = "https://github.com/Danielmelody/ispc-texcomp-rs"
+repository = "https://github.com/Danielmelody/ispc-texcomp-rs"
+documentation = "https://docs.rs/ispc-texcomp"
+readme = "README.md"
+keywords = ["texture", "image", "compress", "intel", "ispc"]
+categories = ["rendering", "rendering::engine", ]
+license = "MIT"
+build = "build.rs"
+include = [
+    "src/astc.rs",
+    "src/bc1.rs",
+    "src/bc3.rs",
+    "src/bc6h.rs",
+    "src/bc7.rs",
+    "src/etc1.rs",
+    "src/lib.rs",
+    "src/ispc/kernel_astc.rs",
+    "src/ispc/kernel.rs",
+    "src/ispc/*.lib",
+    "src/ispc/*.a",
+    "build.rs",
+    "Cargo.toml",
+]
+edition = "2021"
+
+
+[dependencies]
+ispc_rt = "1.0.4"
+
+[build-dependencies]
+ispc_compile = { version = "1.0.4", optional = true }
+ispc_rt = "1.0.4"
+
+[features]
+ispc = ["ispc_compile"]
+
+[dev-dependencies]
+ddsfile = "0.5.0"
+image = "0.24.1"
+
+[profile.release]
+lto = true
+opt-level = 3
+codegen-units = 1
