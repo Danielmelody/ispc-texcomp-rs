@@ -1,7 +1,8 @@
-#[macro_use]
-extern crate ispc_rt;
+use ispc_rt;
 
 pub mod bindings {
+    use ispc_rt::ispc_module;
+
     ispc_module!(kernel);
     ispc_module!(kernel_astc);
 }
