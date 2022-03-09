@@ -1,5 +1,3 @@
-use ispc_rt;
-
 pub mod bindings {
     use ispc_rt::ispc_module;
 
@@ -22,8 +20,12 @@ pub struct RgbaSurface<'a> {
     pub stride: u32,
 }
 
-#[inline(always)]
-pub fn divide_up_by_multiple(val: u32, align: u32) -> u32 {
-    let mask: u32 = align - 1;
-    (val + mask) / align
+pub fn cal_block_count(
+    image_width: u32,
+    image_height: u32,
+    block_width: u32,
+    block_height: u32,
+) -> u32 {
+    ((image_width + block_width - 1) / block_width)
+        * ((image_height + block_height - 1) / block_height)
 }

@@ -2,7 +2,7 @@
 #![allow(unused_variables)]
 
 use crate::bindings::kernel_astc;
-use crate::RgbaSurface;
+use crate::{cal_block_count, RgbaSurface};
 
 #[derive(Debug, Copy, Clone)]
 pub struct EncodeSettings {
@@ -126,7 +126,7 @@ fn astc_rank(
 #[inline(always)]
 pub fn calc_output_size(width: u32, height: u32) -> usize {
     // ASTC uses a fixed block size of 16 bytes (128 bits).
-    let block_count = crate::divide_up_by_multiple(width * height, 16);
+    let block_count = cal_block_count(width, height, 4, 4);
     block_count as usize * 16
 }
 
