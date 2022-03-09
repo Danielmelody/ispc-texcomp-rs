@@ -1,6 +1,6 @@
 [package]
 name = "ispc-texcomp"
-version = "0.1.0"
+version = "0.1.2"
 authors = ["Daniel Hu <yimingdz@gmail.com>", "Graham Wihlidal <graham@wihlidal.ca>"]
 description = "Rust bindings for Intel's ISPC texture compressor."
 homepage = "https://github.com/Danielmelody/ispc-texcomp-rs"
@@ -33,7 +33,7 @@ edition = "2021"
 ispc_rt = "1.0.6"
 
 [build-dependencies]
-ispc_compile = { version = "1.0.12", optional = true }
+ispc_compile = { version = "1.0.13", optional = true }
 ispc_rt = "1.0.6"
 
 [features]

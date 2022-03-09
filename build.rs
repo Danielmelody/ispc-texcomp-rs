@@ -26,25 +26,11 @@ fn compile_kernel() {
     #[cfg(target_arch = "aarch64")]
     let target_isas = vec![TargetISA::Neoni32x4];
 
-    // target_isas_astc cannot clone from target_isas until TargetISA impl Clone or Copy
-    #[cfg(target_arch = "x86_64")]
-    let target_isas_astc = vec![
-        TargetISA::SSE2i32x4,
-        TargetISA::SSE4i32x4,
-        TargetISA::AVX1i32x8,
-        TargetISA::AVX2i32x8,
-        TargetISA::AVX512KNLi32x16,
-        TargetISA::AVX512SKXi32x16,
-    ];
-
-    #[cfg(target_arch = "aarch64")]
-    let target_isas_astc = vec![TargetISA::Neoni32x4];
-
     ispc_compile::Config::new()
         .file("thirdparty/ISPCTextureCompressor/ispc_texcomp/kernel.ispc")
         .opt_level(2)
         .optimization_opt(ispc_compile::OptimizationOpt::FastMath)
-        .target_isas(target_isas)
+        .target_isas(target_isas.clone())
         .out_dir("src/ispc")
         .compile("kernel");
 
@@ -52,7 +38,7 @@ fn compile_kernel() {
         .file("thirdparty/ISPCTextureCompressor/ispc_texcomp/kernel_astc.ispc")
         .opt_level(2)
         .optimization_opt(ispc_compile::OptimizationOpt::FastMath)
-        .target_isas(target_isas_astc)
+        .target_isas(target_isas)
         .out_dir("src/ispc")
         .compile("kernel_astc");
 }
