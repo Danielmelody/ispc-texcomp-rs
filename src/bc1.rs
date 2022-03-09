@@ -1,10 +1,10 @@
 use crate::bindings::kernel;
-use crate::RgbaSurface;
+use crate::{cal_block_count, RgbaSurface};
 
 #[inline(always)]
 pub fn calc_output_size(width: u32, height: u32) -> usize {
     // BC1 uses 8 bytes to store each 4×4 block, giving it an average data rate of 0.5 bytes per pixel.
-    let block_count = crate::divide_up_by_multiple(width * height, 16) as usize;
+    let block_count = cal_block_count(width, height, 4, 4) as usize;
     block_count * 8
 }
 

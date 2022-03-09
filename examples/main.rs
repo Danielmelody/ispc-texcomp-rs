@@ -9,7 +9,7 @@ use std::path::Path;
 use ddsfile::{AlphaMode, Caps2, D3D10ResourceDimension, Dds, DxgiFormat};
 
 fn main() {
-    let rgb_img = image::open(&Path::new("examples/lambertian.jpg")).unwrap();
+    let rgb_img = image::open(&Path::new("examples/rust.png")).unwrap();
 
     let (width, height) = rgb_img.dimensions();
     println!("Width is {}", width);
@@ -27,7 +27,7 @@ fn main() {
         }
     }
 
-    let block_count = ispc_texcomp::divide_up_by_multiple(width * height, 16);
+    let block_count = ispc_texcomp::cal_block_count(width, height, 4, 4);
     println!("Block count: {}", block_count);
 
     let mip_count = 1;
@@ -68,7 +68,9 @@ fn main() {
     );
     println!("  Done!");
 
-    println!("Saving lambertian.dds file");
-    let mut dds_file = File::create("examples/lambertian.dds").unwrap();
+    let path = "examples/rust.dds";
+
+    println!("Saving {} file", path);
+    let mut dds_file = File::create(path).unwrap();
     dds.write(&mut dds_file).expect("Failed to write dds file");
 }

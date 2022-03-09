@@ -17,7 +17,7 @@ pub struct EncodeSettings {
 #[inline(always)]
 pub fn calc_output_size(width: u32, height: u32) -> usize {
     // BC7 uses a fixed block size of 16 bytes (128 bits) and a fixed tile size of 4x4 texels.
-    let block_count = crate::divide_up_by_multiple(width * height, 16) as usize;
+    let block_count = crate::cal_block_count(width, height, 4, 4) as usize;
     block_count * 16
 }
 
