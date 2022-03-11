@@ -1,6 +1,8 @@
 #![allow(dead_code)]
 #![allow(unused_variables)]
 
+use more_asserts::assert_ge;
+
 use crate::bindings::kernel_astc;
 use crate::{cal_block_count, RgbaSurface};
 
@@ -142,7 +144,7 @@ pub fn compress_blocks_into(settings: &EncodeSettings, surface: &RgbaSurface, bl
     assert_eq!(surface.width % settings.block_width, 0);
     assert!(settings.block_height <= 8);
     assert!(settings.block_width <= 8);
-    assert_eq!(
+    assert_ge!(
         blocks.len(),
         calc_output_size(surface.width, surface.height)
     );
