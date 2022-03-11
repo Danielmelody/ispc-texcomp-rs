@@ -15,7 +15,7 @@ jobs:
         run: |
           wget https://github.com/ispc/ispc/releases/download/v1.17.0/ispc-v1.17.0-linux.tar.gz
           tar -xvf ispc-v1.17.0-linux.tar.gz
-          export PATH="$PATH:$(pwd)/ispc-v1.17.0-linux/bin:$(pwd)/ispc-v1.17.0-linux/bin"
+          echo "$(pwd)/ispc-v1.17.0-linux/bin" >> $GITHUB_PATH
       - name: Test ispc
         run: ispc --version
       - name: Build
