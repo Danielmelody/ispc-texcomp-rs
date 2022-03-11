@@ -15,7 +15,7 @@ jobs:
         run: |
           wget https://github.com/ispc/ispc/releases/download/v1.17.0/ispc-v1.17.0-linux.tar.gz
           tar -xf ispc-v1.17.0-linux.tar.gz
-          export PATH="$PATH:~/ispc-v1.17.0-linux/bin"
+          export PATH="$PATH:$(pwd)/ispc-v1.17.0-linux/bin"
       - name: Build
         run: cargo build --verbose --features=ispc --release
       - name: Run tests
