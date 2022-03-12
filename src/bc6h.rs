@@ -1,4 +1,4 @@
-use more_asserts::assert_le;
+use more_asserts::assert_ge;
 
 use crate::bindings::kernel;
 use crate::RgbaSurface;
@@ -27,7 +27,7 @@ pub fn compress_blocks(settings: &EncodeSettings, surface: &RgbaSurface) -> Vec<
 }
 
 pub fn compress_blocks_into(settings: &EncodeSettings, surface: &RgbaSurface, blocks: &mut [u8]) {
-    assert_le!(
+    assert_ge!(
         blocks.len(),
         calc_output_size(surface.width, surface.height)
     );
