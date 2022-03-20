@@ -6,9 +6,6 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    strategy: 
-      matrix:
-        target: [ aarch64-unknown-linux-gnu, i686-pc-windows-gnu, i686-pc-windows-msvc, i686-unknown-linux-gnu, x86_64-apple-darwin, x86_64-pc-windows-gnu, x86_64-pc-windows-msvc, x86_64-unknown-linux-gnu	]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -16,28 +13,39 @@ jobs:
           submodules: true
       - name: Install ispc
         run: |
-          wget https://github.com/ispc/ispc/releases/download/v1.17.0/ispc-v1.17.0-linux.tar.gz
+          mkdir temp && cd temp
+          wget https://github.com/ispc/ispc/releases/download/v1.17.0/ispc-v1.17.0-linux.tar.gz 
           tar -xvf ispc-v1.17.0-linux.tar.gz
           echo "$(pwd)/ispc-v1.17.0-linux/bin" >> $GITHUB_PATH
+          cd ..
       - name: Test ispc
         run: ispc --version
       - name: Install rust
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
-          profile: minimal
-          override: true
-          target: ${{ matrix.target }}
-      - name: Build
-        run: cargo build --verbose --release
+            toolchain: stable
+            override: true
+      - name: install all target platforms
+        run: rustup target add aarch64-unknown-linux-gnu i686-pc-windows-gnu i686-pc-windows-msvc i686-unknown-linux-gnu x86_64-apple-darwin x86_64-pc-windows-gnu x86_64-pc-windows-msvc x86_64-unknown-linux-gnu aarch64-apple-darwin
+      - name: install c++ toolchain
+        run: sudo apt-get update && sudo apt-get --assume-yes install gcc-multilib
+      - name: Build 
+        run: |
+          cargo build --features=ispc --release --target=aarch64-unknown-linux-gnu
+          cargo build --features=ispc --release --target=i686-pc-windows-gnu
+          cargo build --features=ispc --release --target=i686-pc-windows-msvc 
+          cargo build --features=ispc --release --target=x86_64-apple-darwin
+          cargo build --features=ispc --release --target=x86_64-pc-windows-gnu
+          cargo build --features=ispc --release --target=x86_64-pc-windows-msvc 
+          cargo build --features=ispc --release --target=x86_64-unknown-linux-gnu
+          cargo build --features=ispc --release --target=aarch64-apple-darwin 
       - name: Run tests
         run: cargo test --release --verbose
       - name: install cargo-edit
         run: cargo install cargo-edit
       - name: bump version
         run: cargo set-version --bump patch
-      - name: login
-        run: cargo login ${{ secrets.CARGO_TOKEN }}
       - uses: stefanzweifel/git-auto-commit-action@v4
-      - name: publish
-        run: cargo publish
+      - uses: katyo/publish-crates@v1
+        with:
+          registry-token: ${{ secrets.CARGO_TOKEN }}

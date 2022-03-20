@@ -1,5 +1,4 @@
 /target
 **/*.rs.bk
-src/ispc/*.a
-src/ispc/*.lib
 Cargo.lock
+/temp/

@@ -37,7 +37,7 @@ more-asserts = "0.2.2"
 
 [build-dependencies]
 ispc_compile = { version = "1.0.13", optional = true }
-
+ispc_rt = "1.0.7"
 
 [features]
 ispc = ["ispc_compile"]
