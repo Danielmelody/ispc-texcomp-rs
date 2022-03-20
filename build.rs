@@ -1,5 +1,3 @@
-
-
 /*
     ISPC project file builds the kernels as such:
     <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ispc -O2 "%(Filename).ispc" -o "$(TargetDir)%(Filename).obj" -h "$(ProjectDir)%(Filename)_ispc.h" --target=sse2,sse4,avx,avx2 --opt=fast-math</Command>
@@ -8,20 +6,25 @@
 
 #[cfg(feature = "ispc")]
 fn compile_kernel() {
+    use std::env;
+
     use ispc_compile::TargetISA;
 
-    #[cfg(target_arch = "x86_64")]
-    let target_isas = vec![
-        TargetISA::SSE2i32x4,
-        TargetISA::SSE4i32x4,
-        TargetISA::AVX1i32x8,
-        TargetISA::AVX2i32x8,
-        TargetISA::AVX512KNLi32x16,
-        TargetISA::AVX512SKXi32x16,
-    ];
+    println!("cargo:rerun-if-changed=src/ispc/*");
 
-    #[cfg(target_arch = "aarch64")]
-    let target_isas = vec![TargetISA::Neoni32x4];
+    let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
+    let target_isas = match target_arch.as_str() {
+        "x86" | "x86_64" => vec![
+            TargetISA::SSE2i32x4,
+            TargetISA::SSE4i32x4,
+            TargetISA::AVX1i32x8,
+            TargetISA::AVX2i32x8,
+            TargetISA::AVX512KNLi32x16,
+            TargetISA::AVX512SKXi32x16,
+        ],
+        "aarch64" | "arm" => vec![TargetISA::Neoni32x4],
+        _ => vec![],
+    };
 
     ispc_compile::Config::new()
         .file("thirdparty/ISPCTextureCompressor/ispc_texcomp/kernel.ispc")
