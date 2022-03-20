@@ -1,7 +1,4 @@
-extern crate ispc_rt;
 
-#[cfg(feature = "ispc")]
-extern crate ispc_compile;
 
 /*
     ISPC project file builds the kernels as such:

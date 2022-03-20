@@ -28,16 +28,16 @@ include = [
     "build.rs",
     "Cargo.toml",
 ]
-edition = "2021"
+edition = "2018"
 
 
 [dependencies]
-ispc_rt = "1.0.6"
+ispc_rt = "1.0.7"
 more-asserts = "0.2.2"
 
 [build-dependencies]
 ispc_compile = { version = "1.0.13", optional = true }
-ispc_rt = "1.0.6"
+
 
 [features]
 ispc = ["ispc_compile"]

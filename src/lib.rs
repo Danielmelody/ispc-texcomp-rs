@@ -1,3 +1,4 @@
+#[allow(deref_nullptr)]
 pub mod bindings {
     use ispc_rt::ispc_module;
 
