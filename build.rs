@@ -4,15 +4,32 @@
     <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(TargetDir)%(Filename).obj;$(TargetDir)%(Filename)_sse2.obj;$(TargetDir)%(Filename)_sse4.obj;$(TargetDir)%(Filename)_avx.obj;$(TargetDir)%(Filename)_avx2.obj;</Outputs>
 */
 
+use glob::glob;
+use std::fs;
+
+fn clean_target(target_name: &str, target_arch: &str) {
+    let target_files = format!("src/ispc/lib{}{}*", target_name, target_arch);
+    for entry in glob(target_files.as_str()).unwrap() {
+        match entry {
+            Ok(target_file) => println!("{:?}", fs::remove_file(target_file).unwrap()),
+            Err(e) => println!("{:?}", e),
+        }
+    }
+}
+
 #[cfg(feature = "ispc")]
 fn compile_kernel() {
     use std::env;
 
     use ispc_compile::TargetISA;
 
+    let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
+
     println!("cargo:rerun-if-changed=src/ispc/*");
 
-    let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
+    clean_target("kernel", &target_arch);
+    clean_target("kernel_astc", &target_arch);
+
     let target_isas = match target_arch.as_str() {
         "x86" | "x86_64" => vec![
             TargetISA::SSE2i32x4,

@@ -1,0 +1,126 @@
+       Fresh autocfg v1.1.0
+       Fresh unicode-xid v0.2.2
+       Fresh scopeguard v1.1.0
+       Fresh version_check v0.9.4
+       Fresh cfg-if v1.0.0
+       Fresh glob v0.3.0
+       Fresh regex-syntax v0.6.25
+       Fresh unicode-width v0.1.9
+       Fresh minimal-lexical v0.2.1
+       Fresh humantime v2.1.0
+       Fresh vec_map v0.8.2
+       Fresh termcolor v1.1.3
+       Fresh strsim v0.8.0
+       Fresh adler v1.0.2
+       Fresh ansi_term v0.12.1
+       Fresh lazy_static v1.4.0
+       Fresh lazycell v1.3.0
+       Fresh shlex v1.1.0
+       Fresh adler32 v1.2.0
+       Fresh rustc-hash v1.1.0
+       Fresh peeking_take_while v0.1.2
+       Fresh gcc v0.3.55
+       Fresh bitflags v1.3.2
+       Fresh either v1.6.1
+       Fresh futures-sink v0.3.21
+       Fresh weezl v0.1.5
+       Fresh byteorder v1.4.3
+       Fresh color_quant v1.1.0
+       Fresh smallvec v1.8.0
+       Fresh half v1.8.2
+       Fresh jpeg-decoder v0.1.22
+       Fresh bit_field v0.10.1
+       Fresh lebe v0.5.1
+       Fresh more-asserts v0.2.2
+       Fresh scoped_threadpool v0.1.9
+       Fresh bytemuck v1.8.0
+       Fresh libloading v0.7.3
+       Fresh lock_api v0.4.6
+       Fresh textwrap v0.11.0
+       Fresh miniz_oxide v0.5.1
+       Fresh deflate v1.0.0
+       Fresh inflate v0.4.5
+       Fresh gif v0.11.3
+       Fresh libc v0.2.121
+       Fresh proc-macro2 v1.0.36
+       Fresh memchr v2.4.1
+       Fresh crossbeam-utils v0.8.7
+       Fresh log v0.4.14
+       Fresh crc32fast v1.3.2
+       Fresh spin v0.9.2
+       Fresh num-traits v0.2.14
+       Fresh semver v1.0.6
+       Fresh futures-core v0.3.21
+       Fresh quote v1.0.15
+       Fresh atty v0.2.14
+       Fresh aho-corasick v0.7.18
+       Fresh memoffset v0.6.5
+       Fresh nom v7.1.0
+       Fresh which v4.2.4
+       Fresh num_cpus v1.13.1
+       Fresh getrandom v0.2.5
+       Fresh miniz_oxide v0.4.4
+       Fresh clang-sys v1.3.1
+       Fresh crossbeam-channel v0.5.2
+       Fresh num-integer v0.1.44
+       Fresh num-traits v0.1.43
+       Fresh png v0.17.5
+       Fresh regex v1.5.5
+       Fresh clap v2.34.0
+       Fresh syn v1.0.86
+       Fresh crossbeam-epoch v0.9.7
+       Fresh threadpool v1.8.1
+       Fresh cexpr v0.6.0
+       Fresh nanorand v0.6.1
+       Fresh ispc_rt v1.0.7
+       Fresh flate2 v1.0.22
+       Fresh env_logger v0.9.0
+       Fresh pin-project-internal v1.0.10
+       Fresh crossbeam-deque v0.8.1
+       Fresh enum_primitive v0.1.1
+       Fresh num-rational v0.4.0
+       Fresh num-iter v0.1.42
+       Fresh bindgen v0.59.2
+       Fresh rayon-core v1.9.1
+       Fresh pin-project v1.0.10
+       Fresh tiff v0.7.1
+       Fresh ispc_compile v1.0.13
+       Fresh flume v0.10.11
+       Fresh rayon v1.5.1
+       Fresh ddsfile v0.5.1
+   Compiling ispc-texcomp v0.1.7 (/Users/danielhu/Projects/ispc-texcomp-rs)
+       Fresh exr v1.4.1
+       Fresh jpeg-decoder v0.2.2
+     Running `CARGO=/Users/danielhu/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo CARGO_CRATE_NAME=build_script_build CARGO_MANIFEST_DIR=/Users/danielhu/Projects/ispc-texcomp-rs CARGO_PKG_AUTHORS='Daniel Hu <yimingdz@gmail.com>:Graham Wihlidal <graham@wihlidal.ca>:Bruno Ancona <brunoanconasala@gmail.com>' CARGO_PKG_DESCRIPTION='Rust bindings for Intel'\''s ISPC texture compressor.' CARGO_PKG_HOMEPAGE='https://github.com/Danielmelody/ispc-texcomp-rs' CARGO_PKG_LICENSE=MIT CARGO_PKG_LICENSE_FILE='' CARGO_PKG_NAME=ispc-texcomp CARGO_PKG_REPOSITORY='https://github.com/Danielmelody/ispc-texcomp-rs' CARGO_PKG_VERSION=0.1.7 CARGO_PKG_VERSION_MAJOR=0 CARGO_PKG_VERSION_MINOR=1 CARGO_PKG_VERSION_PATCH=7 CARGO_PKG_VERSION_PRE='' CARGO_PRIMARY_PACKAGE=1 DYLD_FALLBACK_LIBRARY_PATH='/Users/danielhu/Projects/ispc-texcomp-rs/target/release/deps:/Users/danielhu/.rustup/toolchains/stable-aarch64-apple-darwin/lib:/Users/danielhu/.rustup/toolchains/stable-aarch64-apple-darwin/lib:/Users/danielhu/lib:/usr/local/lib:/usr/lib' rustc --crate-name build_script_build --edition=2018 build.rs --error-format=json --json=diagnostic-rendered-ansi --crate-type bin --emit=dep-info,link -C embed-bitcode=no -C debug-assertions=off --cfg 'feature="ispc"' --cfg 'feature="ispc_compile"' -C metadata=c2ef41e9e472f634 -C extra-filename=-c2ef41e9e472f634 --out-dir /Users/danielhu/Projects/ispc-texcomp-rs/target/release/build/ispc-texcomp-c2ef41e9e472f634 -L dependency=/Users/danielhu/Projects/ispc-texcomp-rs/target/release/deps --extern ispc_compile=/Users/danielhu/Projects/ispc-texcomp-rs/target/release/deps/libispc_compile-df921988d9ce9665.rlib --extern ispc_rt=/Users/danielhu/Projects/ispc-texcomp-rs/target/release/deps/libispc_rt-71cea4ce2fcc6060.rlib`
+       Fresh image v0.24.1
+warning: unused import: `path::Path`
+ --> build.rs:7:15
+  |
+7 | use std::{fs, path::Path};
+  |               ^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: unused variable: `current_dir`
+  --> build.rs:11:9
+   |
+11 |     let current_dir = env!("CARGO_MANIFEST_DIR");
+   |         ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_current_dir`
+   |
+   = note: `#[warn(unused_variables)]` on by default
+
+warning: `ispc-texcomp` (build script) generated 2 warnings
+     Running `/Users/danielhu/Projects/ispc-texcomp-rs/target/release/build/ispc-texcomp-c2ef41e9e472f634/build-script-build`
+[ispc-texcomp 0.1.7] thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: Os { code: 2, kind: NotFound, message: "No such file or directory" }', build.rs:14:34
+[ispc-texcomp 0.1.7] note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+error: failed to run custom build command for `ispc-texcomp v0.1.7 (/Users/danielhu/Projects/ispc-texcomp-rs)`
+
+Caused by:
+  process didn't exit successfully: `/Users/danielhu/Projects/ispc-texcomp-rs/target/release/build/ispc-texcomp-c2ef41e9e472f634/build-script-build` (exit status: 101)
+  --- stdout
+  cargo:rerun-if-changed=src/ispc/*
+  try remove file src/ispc/libkernelaarch64
+
+  --- stderr
+  thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: Os { code: 2, kind: NotFound, message: "No such file or directory" }', build.rs:14:34
+  note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
