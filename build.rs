@@ -9,6 +9,7 @@ use std::fs;
 
 fn clean_target(target_name: &str, target_arch: &str) {
     let target_files = format!("src/ispc/lib{}{}*", target_name, target_arch);
+    println!("remove lib kernel {}", target_files);
     for entry in glob(target_files.as_str()).unwrap() {
         match entry {
             Ok(target_file) => println!("{:?}", fs::remove_file(target_file).unwrap()),
@@ -24,11 +25,11 @@ fn compile_kernel() {
     use ispc_compile::TargetISA;
 
     let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
-
+    let target = env::var("TARGET").unwrap();
     println!("cargo:rerun-if-changed=src/ispc/*");
 
-    clean_target("kernel", &target_arch);
-    clean_target("kernel_astc", &target_arch);
+    clean_target("kernel", &target);
+    clean_target("kernel_astc", &target);
 
     let target_isas = match target_arch.as_str() {
         "x86" | "x86_64" => vec![

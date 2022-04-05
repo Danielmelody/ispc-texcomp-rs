@@ -39,11 +39,13 @@ jobs:
       - run: cargo build --features=ispc --release --target=aarch64-apple-darwin 
       - name: Run tests
         run: cargo test --release --verbose
-      - name: install cargo-edit
-        run: cargo install cargo-edit
+      - name: install cargo-edit and cargo-get
+        run: cargo install cargo-edit cargo-get
       - name: bump version
         run: cargo set-version --bump patch
       - uses: stefanzweifel/git-auto-commit-action@v4
+        with: 
+          message: "chore(release): v$(cargo get version)"
       - uses: katyo/publish-crates@v1
         with:
           registry-token: ${{ secrets.CARGO_TOKEN }}
