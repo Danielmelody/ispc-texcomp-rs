@@ -29,16 +29,14 @@ jobs:
         run: rustup target add aarch64-unknown-linux-gnu i686-pc-windows-gnu i686-pc-windows-msvc i686-unknown-linux-gnu x86_64-apple-darwin x86_64-pc-windows-gnu x86_64-pc-windows-msvc x86_64-unknown-linux-gnu aarch64-apple-darwin
       - name: install c++ toolchain
         run: sudo apt-get update && sudo apt-get --assume-yes install gcc-multilib
-      - name: Build 
-        run: |
-          cargo build --features=ispc --release --target=aarch64-unknown-linux-gnu
-          cargo build --features=ispc --release --target=i686-pc-windows-gnu
-          cargo build --features=ispc --release --target=i686-pc-windows-msvc 
-          cargo build --features=ispc --release --target=x86_64-apple-darwin
-          cargo build --features=ispc --release --target=x86_64-pc-windows-gnu
-          cargo build --features=ispc --release --target=x86_64-pc-windows-msvc 
-          cargo build --features=ispc --release --target=x86_64-unknown-linux-gnu
-          cargo build --features=ispc --release --target=aarch64-apple-darwin 
+      - run: cargo build --features=ispc --release --target=aarch64-unknown-linux-gnu
+      - run: cargo build --features=ispc --release --target=i686-pc-windows-gnu
+      - run: cargo build --features=ispc --release --target=i686-pc-windows-msvc 
+      - run: cargo build --features=ispc --release --target=x86_64-apple-darwin
+      - run: cargo build --features=ispc --release --target=x86_64-pc-windows-gnu
+      - run: cargo build --features=ispc --release --target=x86_64-pc-windows-msvc 
+      - run: cargo build --features=ispc --release --target=x86_64-unknown-linux-gnu
+      - run: cargo build --features=ispc --release --target=aarch64-apple-darwin 
       - name: Run tests
         run: cargo test --release --verbose
       - name: install cargo-edit
