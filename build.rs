@@ -65,11 +65,13 @@ fn compile_kernel() {
         .lib_path("src/ispc")
         .link();
 
-    println!("cargo:rustc-link-search=native=src/ispc");
-    println!(
-        "cargo:rustc-link-lib=static=ispc_texcomp_astc{}",
-        env::var("TARGET").unwrap()
-    );
+    if env::var("CARGO_CFG_TARGET_FAMILY").unwrap() == "windows" {
+        println!("cargo:rustc-link-search=native=src/ispc");
+        println!(
+            "cargo:rustc-link-lib=static=ispc_texcomp_astc{}",
+            env::var("TARGET").unwrap()
+        );
+    }
 }
 
 fn main() {
