@@ -5,14 +5,33 @@
 */
 
 #[cfg(feature = "ispc")]
-fn compile_kernel() {
-    use std::env;
+use glob::glob;
+#[cfg(feature = "ispc")]
+use std::fs;
 
+#[cfg(feature = "ispc")]
+fn clean_target(target_name: &str, target: &str) {
+    let target_files = format!("src/ispc/*{}{}*", target_name, target);
+    println!("remove lib kernel {}", target_files);
+    for entry in glob(target_files.as_str()).unwrap() {
+        match entry {
+            Ok(target_file) => println!("{:?}", fs::remove_file(target_file).unwrap()),
+            Err(e) => println!("{:?}", e),
+        }
+    }
+}
+
+#[cfg(feature = "ispc")]
+fn compile_kernel() {
     use ispc_compile::TargetISA;
+    use std::env;
 
     let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
     let target = env::var("TARGET").unwrap();
     println!("cargo:rerun-if-changed=src/kernels/*");
+
+    clean_target("kernel", &target);
+    clean_target("kernel_astc", &target);
 
     let target_isas = match target_arch.as_str() {
         "x86" | "x86_64" => vec![
