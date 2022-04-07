@@ -4,20 +4,6 @@
     <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(TargetDir)%(Filename).obj;$(TargetDir)%(Filename)_sse2.obj;$(TargetDir)%(Filename)_sse4.obj;$(TargetDir)%(Filename)_avx.obj;$(TargetDir)%(Filename)_avx2.obj;</Outputs>
 */
 
-use glob::glob;
-use std::fs;
-
-fn clean_target(target_name: &str, target: &str) {
-    let target_files = format!("src/ispc/*{}{}*", target_name, target);
-    println!("remove lib kernel {}", target_files);
-    for entry in glob(target_files.as_str()).unwrap() {
-        match entry {
-            Ok(target_file) => println!("{:?}", fs::remove_file(target_file).unwrap()),
-            Err(e) => println!("{:?}", e),
-        }
-    }
-}
-
 #[cfg(feature = "ispc")]
 fn compile_kernel() {
     use std::env;
@@ -26,10 +12,7 @@ fn compile_kernel() {
 
     let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
     let target = env::var("TARGET").unwrap();
-    println!("cargo:rerun-if-changed=src/ispc/*");
-
-    clean_target("kernel", &target);
-    clean_target("kernel_astc", &target);
+    println!("cargo:rerun-if-changed=src/kernels/*");
 
     let target_isas = match target_arch.as_str() {
         "x86" | "x86_64" => vec![
@@ -46,7 +29,6 @@ fn compile_kernel() {
 
     ispc_compile::Config::new()
         .file("src/kernels/kernel.ispc")
-        .opt_level(2)
         .optimization_opt(ispc_compile::OptimizationOpt::FastMath)
         .target_isas(target_isas.clone())
         .out_dir("src/ispc")
@@ -54,7 +36,6 @@ fn compile_kernel() {
 
     ispc_compile::Config::new()
         .file("src/kernels/kernel_astc.ispc")
-        .opt_level(2)
         .optimization_opt(ispc_compile::OptimizationOpt::FastMath)
         .target_isas(target_isas)
         .out_dir("src/ispc")
@@ -68,15 +49,14 @@ fn compile_kernel() {
             .cpp(true)
             .file("src/ispc/ispc_texcomp_astc.cpp")
             .include(outdir)
-            .compile(&format!(
-                "ispc_texcomp_astc{}",
-                std::env::var("TARGET").unwrap()
-            ));
+            .out_dir("src/ispc")
+            .compile(&format!("ispc_texcomp_astc{}", target));
     }
 }
 
 #[cfg(not(feature = "ispc"))]
 fn compile_kernel() {
+    use std::env;
     ispc_rt::PackagedModule::new("kernel")
         .lib_path("src/ispc")
         .link();
@@ -84,6 +64,12 @@ fn compile_kernel() {
     ispc_rt::PackagedModule::new("kernel_astc")
         .lib_path("src/ispc")
         .link();
+
+    println!("cargo:rustc-link-search=native=src/ispc");
+    println!(
+        "cargo:rustc-link-lib=static=ispc_texcomp_astc{}",
+        env::var("TARGET").unwrap()
+    );
 }
 
 fn main() {

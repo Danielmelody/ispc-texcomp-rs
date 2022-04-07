@@ -2,3 +2,5 @@
 **/*.rs.bk
 Cargo.lock
 /temp/
+# build output for cpp inside /src/ispc/
+/src/ispc/src/ispc
