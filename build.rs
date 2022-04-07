@@ -7,8 +7,8 @@
 use glob::glob;
 use std::fs;
 
-fn clean_target(target_name: &str, target_arch: &str) {
-    let target_files = format!("src/ispc/lib{}{}*", target_name, target_arch);
+fn clean_target(target_name: &str, target: &str) {
+    let target_files = format!("src/ispc/*{}{}*", target_name, target);
     println!("remove lib kernel {}", target_files);
     for entry in glob(target_files.as_str()).unwrap() {
         match entry {
@@ -59,6 +59,20 @@ fn compile_kernel() {
         .target_isas(target_isas)
         .out_dir("src/ispc")
         .compile("kernel_astc");
+
+    let target_os_family = env::var("CARGO_CFG_TARGET_FAMILY").unwrap();
+
+    if target_os_family == "windows" {
+        let outdir = env::var("OUT_DIR").unwrap();
+        cc::Build::new()
+            .cpp(true)
+            .file("src/ispc/ispc_texcomp_astc.cpp")
+            .include(outdir)
+            .compile(&format!(
+                "ispc_texcomp_astc{}",
+                std::env::var("TARGET").unwrap()
+            ));
+    }
 }
 
 #[cfg(not(feature = "ispc"))]
