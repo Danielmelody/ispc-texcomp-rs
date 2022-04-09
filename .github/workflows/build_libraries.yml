@@ -41,6 +41,7 @@ jobs:
         with:
             toolchain: stable
             override: true
+            
       - name: install c++ toolchain on linux
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get update && sudo apt-get --assume-yes install gcc-multilib
@@ -48,26 +49,30 @@ jobs:
         if: matrix.os == 'windows-latest'
         uses: ilammy/msvc-dev-cmd@v1
       
-      - name: install *nix target platforms
-        if: matrix.os == 'ubuntu-latest'
-        run: rustup target add aarch64-unknown-linux-gnu i686-unknown-linux-gnu x86_64-unknown-linux-gnu 
       - name: install macos target platforms
+        if: matrix.os == 'macos-latest'
+        run: rustup target add x86_64-apple-darwin x86_64-unknown-linux-gnu aarch64-apple-darwin aarch64-apple-ios
+      - name: install linux target platforms
         if: matrix.os == 'ubuntu-latest'
-        run: rustup target add x86_64-apple-darwin x86_64-unknown-linux-gnu aarch64-apple-darwin
+        run: rustup target add aarch64-unknown-linux-gnu i686-unknown-linux-gnu x86_64-unknown-linux-gnu aarch64-linux-android	armv7-linux-androideabi 
       - name: install windows target platforms
         if: matrix.os == 'windows-latest'
         run: rustup target add i686-pc-windows-gnu i686-pc-windows-msvc x86_64-pc-windows-gnu x86_64-pc-windows-msvc
       
       - name: build macOS targets
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'macos-latest'
         run: |
           cargo build --features=ispc --release --target=x86_64-apple-darwin
           cargo build --features=ispc --release --target=aarch64-apple-darwin 
+          cargo build --features=ispc --release --target=aarch64-apple-ios
       - name: build linux targets
         if: matrix.os == 'ubuntu-latest'
         run: |
           cargo build --features=ispc --release --target=aarch64-unknown-linux-gnu
           cargo build --features=ispc --release --target=x86_64-unknown-linux-gnu
+          cargo build --features=ispc --release --target=i686-unknown-linux-gnu 
+          cargo build --features=ispc --release --target=aarch64-linux-android	
+          cargo build --features=ispc --release --target=armv7-linux-androideabi
       - name: build windows targets
         if: matrix.os == 'windows-latest'
         run: |
@@ -78,7 +83,8 @@ jobs:
 
       - name: Run tests on host
         run: cargo test --release --features=ispc --verbose
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - uses: EndBug/add-and-commit@v9
         with: 
-          file_pattern: src/ispc/*.a src/ispc/*.lib
-          commit_message: "chore: automatically build ispc lib for ${{ matrix.os }}"
+          add: src/ispc/*.a src/ispc/*.lib
+          message: "chore: automatically build ispc lib for ${{ matrix.os }}"
+          pull: '--rebase --autostash'
