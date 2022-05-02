@@ -1,76 +1,78 @@
 use ddsfile::NewDxgiParams;
-use image::GenericImageView;
-use image::ImageBuffer;
-use image::Pixel;
-use ispc_texcomp::bc7;
+use image::{GenericImageView, ImageBuffer};
 use std::fs::File;
 use std::path::Path;
 
 use ddsfile::{AlphaMode, Caps2, D3D10ResourceDimension, Dds, DxgiFormat};
 
 fn main() {
-    let rgb_img = image::open(&Path::new("examples/rust.png")).unwrap();
+    let imgpath = std::env::args()
+        .skip(1)
+        .next()
+        .unwrap_or("examples/rust.png".to_string());
 
-    let (width, height) = rgb_img.dimensions();
-    println!("Width is {}", width);
-    println!("Height is {}", height);
-    println!("ColorType is {:?}", rgb_img.color());
+    let img_origin = image::open(&Path::new(&imgpath)).unwrap();
 
-    let mut rgba_img = ImageBuffer::new(width, height);
+    let (origin_width, origin_height) = img_origin.dimensions();
+    let (round_width, round_height) = ((origin_width + 3) / 4 * 4, (origin_height + 3) / 4 * 4);
+    println!("Width is {}", origin_width);
+    println!("Height is {}", origin_height);
+    println!("ColorType is {:?}", img_origin.color());
 
-    println!("Converting RGB -> RGBA"); // could be optimized
-    for x in (0_u32..width).into_iter() {
-        for y in (0_u32..height).into_iter() {
-            let pixel = rgb_img.get_pixel(x, y);
-            let pixel_rgba = pixel.to_rgba();
-            rgba_img.put_pixel(x, y, pixel_rgba);
+    let alpha_mode = match img_origin.color() {
+        image::ColorType::Rgb8 => AlphaMode::Opaque,
+        image::ColorType::Rgba8 => AlphaMode::Straight,
+        _ => AlphaMode::Unknown,
+    };
+
+    img_origin.flipv();
+
+    // We need rgba buffer to compress texture
+    let mut img_rounded = ImageBuffer::new(round_width, round_height);
+    println!("Converting RGB -> RGBA");
+    for x in (0_u32..origin_width).into_iter() {
+        for y in (0_u32..origin_height).into_iter() {
+            let pixel = img_origin.get_pixel(x, y);
+            img_rounded.put_pixel(x, y, pixel);
         }
     }
 
-    let block_count = ispc_texcomp::cal_block_count(width, height, 4, 4);
+    let block_count = ispc_texcomp::cal_block_count(origin_width, origin_height, 4, 4);
     println!("Block count: {}", block_count);
 
-    let mip_count = 1;
-    let array_layers = 1;
-    let caps2 = Caps2::empty();
-    let is_cubemap = false;
-    let resource_dimension = D3D10ResourceDimension::Texture2D;
-    let alpha_mode = AlphaMode::Opaque;
-    let depth = 1;
-
     let dxgi_param = NewDxgiParams {
-        height,
-        width,
-        depth: Some(depth),
+        height: origin_height,
+        width: origin_width,
+        depth: Some(1),
         format: DxgiFormat::BC7_UNorm,
-        mipmap_levels: Some(mip_count),
-        array_layers: Some(array_layers),
-        caps2: Some(caps2),
-        is_cubemap,
-        resource_dimension,
+        mipmap_levels: Some(1),
+        array_layers: Some(1),
+        caps2: Some(Caps2::empty()),
+        is_cubemap: false,
+        resource_dimension: D3D10ResourceDimension::Texture2D,
         alpha_mode,
     };
 
     let mut dds = Dds::new_dxgi(dxgi_param).unwrap();
 
     let surface = ispc_texcomp::RgbaSurface {
-        width,
-        height,
-        stride: width * 4,
-        data: &rgba_img,
+        width: round_width,
+        height: round_height,
+        stride: round_width * 4,
+        data: &img_rounded,
     };
 
     println!("Compressing to BC7...");
-    bc7::compress_blocks_into(
-        &bc7::opaque_ultra_fast_settings(),
+    ispc_texcomp::bc7::compress_blocks_into(
+        &ispc_texcomp::bc7::alpha_fast_settings(),
         &surface,
         &mut dds.get_mut_data(0 /* layer */).unwrap(),
     );
     println!("  Done!");
 
-    let path = "examples/rust.dds";
+    let outpath = imgpath.replace(".png", ".dds").replace(".jpg", ".dds");
 
-    println!("Saving {} file", path);
-    let mut dds_file = File::create(path).unwrap();
+    println!("Saving {} file", outpath);
+    let mut dds_file = File::create(outpath).unwrap();
     dds.write(&mut dds_file).expect("Failed to write dds file");
 }
