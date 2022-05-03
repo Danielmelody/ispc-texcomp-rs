@@ -5,12 +5,14 @@ Yet an another Rust binding for ispc texture compression
 
 Supported texture formats:
 
+* BC6H (FP16 HDR input)
 * BC7
-* BC6H
-* BC3
-* BC4
 * ETC1
+* BC1, BC3 (aka DXT1, DXT5) and BC4, BC5 (aka ATI1N, ATI2N)
 
+Work in progress support format:
+
+* ASTC (LDR, block sizes up to 8x8)
 ### Integration
 
 To use this crate, one could simply add this to it's Cargo.toml
