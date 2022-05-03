@@ -1,5 +1,6 @@
 # ISPC Texture Compression Rust bindings
 
+[![Latest version](https://img.shields.io/crates/v/ispc-texcomp.svg)](https://crates.io/crates/ispc-texcomp) [![Documentation](https://docs.rs/ispc-texcomp/badge.svg)](https://docs.rs/ispc-texcomp)
 
 Yet an another Rust binding for ispc texture compression
 
