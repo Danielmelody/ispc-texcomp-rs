@@ -16,23 +16,23 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           mkdir temp && cd temp
-          wget https://github.com/ispc/ispc/releases/download/v1.17.0/ispc-v1.17.0-linux.tar.gz 
-          tar -xvf ispc-v1.17.0-linux.tar.gz
-          echo "$(pwd)/ispc-v1.17.0-linux/bin" >> $GITHUB_PATH
+          wget https://github.com/ispc/ispc/releases/download/v1.18.0/ispc-v1.18.0-linux.tar.gz 
+          tar -xvf ispc-v1.18.0-linux.tar.gz
+          echo "$(pwd)/ispc-v1.18.0-linux/bin" >> $GITHUB_PATH
           cd ..
       - name: Install ispc On MacOS
         if: matrix.os == 'macos-latest'
         run: |
           mkdir temp && cd temp
-          wget https://github.com/ispc/ispc/releases/download/v1.17.0/ispc-v1.17.0-macOS.tar.gz 
-          tar -xvf ispc-v1.17.0-macOS.tar.gz
-          echo "$(pwd)/ispc-v1.17.0-macOS/bin" >> $GITHUB_PATH
+          wget https://github.com/ispc/ispc/releases/download/v1.18.0/ispc-v1.18.0-macOS.tar.gz 
+          tar -xvf ispc-v1.18.0-macOS.tar.gz
+          echo "$(pwd)/ispc-v1.18.0-macOS/bin" >> $GITHUB_PATH
           cd ..
       - name: Install ispc On Windows
         if: matrix.os == 'windows-latest'
         run: |
-          choco install ispc --no-progress
-          echo "C:\Program Files\ISPC\ispc-v1.17.0-windows\bin" >> $env:GITHUB_PATH
+          choco install ispc --no-progress --version=1.18.0
+          echo "C:\Program Files\ISPC\ispc-v1.18.0-windows\bin" >> $env:GITHUB_PATH
 
       - name: Test ispc
         run: ispc --version
